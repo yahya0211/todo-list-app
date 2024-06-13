@@ -1,4 +1,5 @@
 import api, { setAuthToken } from "@/api";
+import { Collapsible } from "@/components/Collapsible";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link, useRouter } from "expo-router";
 import React, { useState, useEffect } from "react";
@@ -108,7 +109,7 @@ const HomePage = () => {
     try {
       await AsyncStorage.removeItem("token");
       setAuthToken(undefined);
-      router.push("/");
+      router.replace("/");
     } catch (error) {
       console.error("Failed to logout:", error);
     }
@@ -125,7 +126,6 @@ const HomePage = () => {
         <Text style={styles.dateText}>Select Date: {date.toDateString()}</Text>
       </TouchableOpacity>
 
-      <Button title={status ? "Completed" : "Incomplete"} onPress={() => setStatus(!status)} />
       <Button title="Add Task" onPress={() => addTodo(Math.random().toString())} />
 
       <FlatList
@@ -133,9 +133,9 @@ const HomePage = () => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.todoItem}>
-            <Text>
-              {item.title} - {item.subject}
-            </Text>
+            <Collapsible title={item.title}>
+              <Text>{item.subject}</Text>
+            </Collapsible>
             <Text>
               {new Date(item.date).toDateString()} - {item.status ? "Completed" : "Incomplete"}
             </Text>
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ddd",
   },
   buttonContainer: {
-    marginTop: 20, // Adjust margin for better spacing
+    marginTop: 20,
   },
   modalContainer: {
     flex: 1,

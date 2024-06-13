@@ -13,7 +13,6 @@ const LoginForm = () => {
   const handleLoginPress = async () => {
     try {
       const login = await api.post("auth/login", { username, password });
-      console.log(login);
 
       if (username.trim() === "" || password.trim() === "") {
         Alert.alert("Error", "Please enter both username and password");
@@ -28,7 +27,6 @@ const LoginForm = () => {
       }
 
       const res = await AsyncStorage.setItem("token", login.data?.accessToken);
-      console.log(res);
       return res;
     } catch (error) {
       console.log(error);
