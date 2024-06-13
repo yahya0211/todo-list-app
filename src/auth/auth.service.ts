@@ -42,18 +42,23 @@ export class AuthService {
   }
 
   async register(dto: CreateUserDto) {
-    const { username } = dto;
-    const existingUser = await this.prisma.user.findFirst({
-      where: { username },
+    const existingUser = await this.prisma.user.count({
+      where: {
+        OR: [{ username: dto.username }, { email: dto.email }],
+      },
     });
-    if (existingUser) {
+
+
+    if (existingUser > 0) {
       throw new Error('User already register');
     }
 
     const hashedPassword = await bcrypt.hash(dto.password, 10);
     return this.prisma.user.create({
       data: {
-        ...dto,
+        username: dto.username,
+        name: dto.name,
+        email: dto.email,
         password: hashedPassword,
       },
     });

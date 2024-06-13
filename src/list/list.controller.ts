@@ -24,7 +24,6 @@ export class ListController {
   @Post()
   async addList(@Body() dto: CreateListDto, @Request() req) {
     dto.todoId = req.user.id;
-    console.log(dto.todoId);
 
     return this.listService.createList(dto);
   }
@@ -34,9 +33,15 @@ export class ListController {
     return this.listService.findAll();
   }
 
-  @Get(':id')
+  @Get('detailUser/:id')
   async findOne(@Param('id') id: string) {
     return this.listService.findOne(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('detail')
+  async findListUser(@Request() req) {
+    return this.listService.findListUser(req.user.id);
   }
 
   @Patch(':id')

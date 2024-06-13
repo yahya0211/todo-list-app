@@ -21,6 +21,7 @@ export class ListService {
     return await this.prisma.todo.findMany({
       select: {
         id: true,
+        todoId: true,
         title: true,
         date: true,
         subject: true,
@@ -37,6 +38,17 @@ export class ListService {
     });
   }
 
+  async findListUser(id: string) {
+    return await this.prisma.user.findFirst({
+      where: {
+        id: id,
+      },
+      include: {
+        todo: true,
+      },
+    });
+  }
+
   async update(id: string, updateListDto: UpdateListDto) {
     return await this.prisma.todo.update({
       where: { id: id },
@@ -48,7 +60,7 @@ export class ListService {
 
   async remove(id: string) {
     return await this.prisma.todo.deleteMany({
-      where: {id: id}
+      where: { id: id },
     });
   }
 }
